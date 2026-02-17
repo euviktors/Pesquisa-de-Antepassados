@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -50,7 +51,8 @@
             padding: 12px;
             border: 1px solid #ccc;
             border-radius: 4px;
-            box-sizing: border-box; /* Garante que padding não aumente a largura total */
+            box-sizing: border-box;
+            /* Garante que padding não aumente a largura total */
             font-size: 16px;
             transition: border-color 0.3s ease;
         }
@@ -87,12 +89,13 @@
         }
     </style>
 </head>
+
 <body>
 
     <div class="form-container">
         <h1>Pesquisa de Antepassados</h1>
-        <form action="https://n8n.laodigital.com.br/webhook/01f58753-9260-4783-88ea-3494241fe926" method="POST">
-            
+        <form id="pesquisaForm">
+
             <div class="form-group">
                 <label for="nome">Nome Completo</label>
                 <input type="text" id="nome" name="nome" required placeholder="Digite seu nome completo">
@@ -117,5 +120,39 @@
         </form>
     </div>
 
+    <script>
+        document.getElementById('pesquisaForm').addEventListener('submit', function (event) {
+            event.preventDefault(); // Impede o envio padrão do formulário
+
+            const formData = {
+                nome: document.getElementById('nome').value,
+                nascimento: document.getElementById('nascimento').value,
+                cpf: document.getElementById('cpf').value,
+                rg: document.getElementById('rg').value
+            };
+
+            fetch('https://n8n.laodigital.com.br/webhook/01f58753-9260-4783-88ea-3494241fe926', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            })
+                .then(response => {
+                    if (response.ok) {
+                        alert('Informações enviadas com sucesso!');
+                        document.getElementById('pesquisaForm').reset();
+                    } else {
+                        alert('Erro ao enviar informações provided. Tente novamente.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro:', error);
+                    alert('Erro ao conectar com o servidor.');
+                });
+        });
+    </script>
+
 </body>
+
 </html>
